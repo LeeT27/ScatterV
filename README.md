@@ -135,24 +135,12 @@ To implement this theory into ScatterV, I used an LFSR to utilize primitive poly
 Since RISC-V registers are 32 bits, a primitive polynomial of degree n = 32 will be used to produce 4,294,967,295 unique combinations! 
 <img width="600" alt="image" src="https://github.com/user-attachments/assets/8ebdb6de-3e92-4ba9-a2ea-fe4ef09c40d3" />
 
+### Part 1 Reflection
 
+## Part 2: Pipeline architecture and hazard mitigation
 
-### 🚧 Pipeline Hazards
-hullo
-### ✅ RTL Verification
-hullo
-### ⚙️ FPGA Synthesis
-hullo
-### 💡 Seven-Segment Digit Display
-Throughout the running process, a 32 bit register value is stored in binary, but needs to be shown on the FPGA peripheral as a human-readable decimal number. 
-### 📜 RISC-V Assembly
+## Part 3: Hardware synthesis and FPGA demo
 
-
----
-
-## Challenges and Fixes
-
----
-## Reflection
+## Overall Reflection
 
 ---
