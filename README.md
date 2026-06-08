@@ -119,62 +119,7 @@ The ratio converges to $\pi$ as the sample size approaches ∞,
 ---
 
 ## Part 1: Single cycle RISC-V core and RNG implementation
-When I finished designing my very [first processor](https://github.com/LeeT27/learningVerilog) around a year ago, I felt very thrilled that I created a custom ISA CPU that could perform simple arithmetic programs. However after reflection, I realized my ISA was inefficient, slow, and had a small amount of instructions, I felt more inspired to take on more industry level processors such as RISC-V and pipeline theory. 
-
-### 🏗️ RISC-V Architecture
-RISC-V is an open source instruction set architecture that is popular in IoT, embedded systems, and operating systems. Programs written in RISC-V assembly can run sequential instructions that handle fundamental operations such as arithmetic, data transfer, and control flow. Two major benefits that make RISC-V special is its easy access to modify the instruction set and reduced complexity in hardware design. Typically, RISC-V has 32 bits per instruction, 32 general purpose registers, 8 bits per memory location, and stores the least significant byte at the lowest memory address (little endian). RV32, used for smaller embedded applications, has 32 bits per register while RV64, used for high performance computing, has 64 bits per register. ScatterV uses the RV32 architecture.
-
-ScatterV utilitizes a 5-stage instruction pipeline to improve performance to allow parallel processing. Every instruction goes through the following stages:
-- **Instruction Fetch (IF)**: The processor reads the instruction from memory using a program counter (PC). The selected instruction is composed of the bytes mem[PC], mem[PC+1], mem[PC+2], and mem[PC+3], where mem[PC] is the least significant byte and mem[PC+3] is the most significant byte. The PC is then incremented by 4 to point to the next instruction for the following cycle.
-- **Instruction Decode (ID)**: The fetched instruction is decoded by the control unit to determine its opcode and operands. The processor also begins to read the values of source register chosen by the instruction.
-- **Execute (EX)**: The ALU performs the operation specified by the instruction. Applies for arithmetic instructions and calculating branch logic.
-- **Memory Access (MEM)**: Memory can be read and overwritten in this stage. Applies for loading and storing instructions.
-- **Write Back (WB)**: The result values that are computed via ALU or loaded from memory are written into destination register.
-
-Here is an overview of all the modules used in ScatterV:
-- Top Module
-  - Inputs: clk, rst, switches
-  - Outputs: segments
-  - Holds all the submodules
-- **Program Counter (PC)**
-  - Inputs: clk, rst, pc_next
-  - Outputs: pc_out
-  - Holds pointer to current instruction address and increments by 4 on every rising clock edge, or branches/jumps to a different target based on control signals
-- **Instruction Memory**
-  - Inputs: pc_out
-  - Outputs: instruction
-  - Takes current PC and outputs the 32-bit instruction at that address
-- **Control Unit**
-  - Inputs: opcode
-  - Outputs: alu_op, alu_src, mem_read_en, mem_write_en, mem_to_reg, reg_write_en, jump_toggle
-  - Decodes opcode of instruction and generates the control signals that correspond with the proper instruction
-- **Program Memory**
-  - Inputs: mem_address, alu_result, write_data, mem_read_en, mem_write_en
-  - Outputs: read_data
-  - Stores program data. Reads data during load instructions and writes data during store instructions
-- **Register File**
-  - Inputs: clk, rs1_addr, rs2_addr, rd_addr, rd_data, reg_write_en
-  - Outputs: rs1_data, rs2_data
-  - The register file contains 32 general purpose registers to store values for source and destination registers. There are two read ports to access source registers and a write port to update a destination register if reg_write is enabled
-- **ALU**
-  - Inputs: alu_op, operand1, operand2
-  - Outputs: alu_result, zero_flag
-  - The ALU takes two operands and performs an arithmetic or logical operation, decided by alu_op, and outputs a result along with a zero flag used for branch decisions
-- **Immediate Generator**
-  - Inputs: instruction
-  - Outputs: immediate_out
-  - The immediate generator extracts immediate values from instructions and outputs that value so it can be used for calculations. Different instruction types pick different ranges of bits from the instruction, so the module selects the correct logics accordingly
-- **Seven-segment Decoder**
-  - Inputs: clk, rst, regs[9], regs[10]
-  - Outputs: segments_left [6:0], segments_right [6:0], 
-  - The seven-segment decoder module converts binary values from registers 9 and 10 into segment control signals to be displayed on FPGA at all times.
-
-Here is a diagram of the processor:
-
-<img width="400" src="https://github.com/user-attachments/assets/c4e6a2ae-6fd2-4ed3-b591-65e0ef8ad2b2" />
-
-
-<img width="1109" height="315" alt="image" src="https://github.com/user-attachments/assets/0081d60a-b194-4487-b2cc-d86e161800de" />
+When I finished designing my very [first processor](https://github.com/LeeT27/learningVerilog) around a year ago, I felt very thrilled that I created a custom ISA CPU that could perform simple arithmetic programs. Reflecting, I realized that my ISA was inefficient, slow, and lacking in instructions, thus, I felt more inspired to take on more industry level processors such as RISC-V, while also tackling pipeline theory. I chose RISC-V for its popularity in IoT, embedded systems, and operating systems. Finding that RISC-V is easily modifiable, I also wanted to create a custom instruction, `RND`, could be used for demonstration. Here is the theory behind hardware RNG:
 
 ### 🎲 `RND` Instruction Implementation
 The core of ScatterV's random number generation comes from the abstract algebra theory of primitive polynomials and its application on a linear feedback shift register (LFSR). To make sequences appear as random as possible every clock cycle, the amount of unique sequences before repeating the same pattern needs to be maximized. This is where the magic of primitive polynomials comes in. A primitive polynomial is a special type of irreducible polynomial, meaning that it cannot be factored into smaller polynomials. Another property is that a primitive polynomial of degree n has $(2^{n}-1)$ unique states before repeating to its old pattern (base will be 2 for digital logic). A good analogy is that if you have a deck of 52 cards, the shuffling mechanism of a primitive polynomial would go through all 52 cards before repeating the pattern rather than a smaller pattern of cycling through the same 8 cards. Here below is an example of a primitive polynomial of degree n = 3: 
@@ -187,7 +132,10 @@ To implement this theory into ScatterV, I used an LFSR to utilize primitive poly
 
 <img src="https://github.com/user-attachments/assets/dcd47c8c-e1f9-4fc6-b67e-e26096d311a7" width="400">
 
-Since RISC-V registers are 32 bits, a primitive polynomial of degree n = 32 will be used to produce 4,294,967,295 unique combinations! (Talk about how new instruction is added)
+Since RISC-V registers are 32 bits, a primitive polynomial of degree n = 32 will be used to produce 4,294,967,295 unique combinations! 
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/8ebdb6de-3e92-4ba9-a2ea-fe4ef09c40d3" />
+
+
 
 ### 🚧 Pipeline Hazards
 hullo
