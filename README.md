@@ -46,7 +46,7 @@ The program approximates $\pi$ by generating random coordinate points $(x, y)$ w
 
 $$x^2 + y^2 \le 1$$
 
-<div style="padding: 30px;" align="center">
+<div style="padding: 30px; text-align: center;">
   <img src="https://github.com/user-attachments/assets/855c08f7-7e33-4f49-b01e-93e95c569be3" width="200px" alt="Monte Carlo">
 </div>
 
