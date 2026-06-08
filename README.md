@@ -89,16 +89,18 @@ The ratio converges to π as the sample size approaches ∞,
 ---
 ## Instruction Encoding
 
-| Instruction Format | Opcode | `funct3` / `funct7` Notes |
-| :--- | :---: | :--- |
-| **R-Type** (ADD, SUB, XOR, etc.) | `0110011` | `funct3` defines op; `funct7` distinguishes `SUB`/`SRA` |
-| **I-Type** (ADDI, JALR, etc.) | `0010011` | `funct3` defines op |
-| **Load** (LW, LH, LB) | `0000011` | `funct3` defines size |
-| **Store** (SW, SH, SB) | `0100011` | `funct3` defines size |
-| **Branch** (BEQ, BNE, etc.) | `1100011` | `funct3` defines condition |
-| **U-Type** (LUI, AUIPC) | `0110111` | N/A |
-| **J-Type** (JAL) | `1101111` | N/A |
-| **Custom** (RND) | `0001011` | N/A |
+| Instruction Type | Opcode (7-bit) | Notes |
+| :--- | :--- | :--- |
+| **R-Type** | `0110011` | Register-Register Arithmetic |
+| **I-Type** | `0010011` | Immediate Arithmetic (ADDI, etc.) |
+| **Load** | `0000011` | LW, LH, LB |
+| **Store** | `0100011` | SW, SH, SB |
+| **Branch** | `1100011` | BEQ, BNE, etc. |
+| **U-Type (LUI)** | `0110111` | Load Upper Immediate |
+| **U-Type (AUIPC)** | `0010111` | Add Upper Immediate to PC |
+| **J-Type (JAL)** | `1101111` | Jump and Link |
+| **I-Type (JALR)** | `1100111` | Jump and Link Register |
+| **Custom (RND)** | `0001011` | Custom-0 |
 
 ---
 
