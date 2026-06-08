@@ -13,12 +13,25 @@ This repository builds upon my previous work, [learningVerilog](https://github.c
 ---
 ## Parts
 I seperated the project into three major parts/milestones:
-1. Single cycle RISC-V and RND implementation
-2. Pipelining and hazard mitigation
-3. FPGA synthesis and demo
+1. Single cycle RISC-V core and RNG implementation
+2. Pipeline architecture and hazard mitigation
+3. Hardware synthesis and FPGA demo
    
 ---
 
+## Instruction Set Architecture
+
+| Category | Instructions |
+| :--- | :--- |
+| **R-Type** | `ADD`, `SUB`, `SLL`, `SLT`, `SLTU`, `XOR`, `SRL`, `SRA`, `OR`, `AND` |
+| **I-Type** | `ADDI`, `SLTI`, `SLTIU`, `XORI`, `ORI`, `ANDI`, `SLLI`, `SRLI`, `SRAI`, `LB`, `LH`, `LW`, `JALR` |
+| **S-Type** | `SB`, `SH`, `SW` |
+| **B-Type** | `BEQ`, `BNE`, `BLT`, `BGE`, `BLTU`, `BGEU` |
+| **U-Type** | `LUI`, `AUIPC` |
+| **J-Type** | `JAL` |
+| **Custom** | `RND` |
+
+---
 ## Features
 - **Instruction Set:** RV32I base instructions — arithmetic, logic, loads, stores, branches, and jumps — plus a custom `RND` instruction for pseudorandom number generation every clock cycle  
 - **Assembly Compatibility:** Runs standard RISC-V assembly programs with full compatibility
