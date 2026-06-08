@@ -20,7 +20,7 @@ I seperated the project into three major parts/milestones:
 ---
 
 ## Instruction Set Architecture
-<img width="1109" height="315" alt="image" src="https://github.com/user-attachments/assets/0081d60a-b194-4487-b2cc-d86e161800de" />
+<img width="700" alt="image" src="https://github.com/user-attachments/assets/0081d60a-b194-4487-b2cc-d86e161800de" />
 
 | Category | Instructions |
 | :--- | :--- |
