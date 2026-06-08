@@ -46,7 +46,7 @@ The program approximates $\pi$ by generating random coordinate points $(x, y)$ w
 
 $$x^2 + y^2 \le 1$$
 
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/b913b72c-2f57-46b3-80e3-baa0020a35d0" />
+<img width="200" align="center" alt="image" src="https://github.com/user-attachments/assets/855c08f7-7e33-4f49-b01e-93e95c569be3" />
 
 An internal "hits" counter is incremented everytime it lands inside the quarter circle and a total "samples counter" is incremented everytime, independent of where it lands. The approximation of $\pi$ is found through the ratio of points:
 
