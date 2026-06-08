@@ -118,7 +118,7 @@ The ratio converges to $\pi$ as the sample size approaches ∞,
   
 ---
 
-## Deep Dive Notes
+## Part 1: Single cycle RISC-V core and RNG implementation
 ### 🏗️ RISC-V Architecture
 RISC-V is an open source instruction set architecture that is popular in IoT, embedded systems, and operating systems. Programs written in RISC-V assembly can run sequential instructions that handle fundamental operations such as arithmetic, data transfer, and control flow. Two major benefits that make RISC-V special is its easy access to modify the instruction set and reduced complexity in hardware design. Typically, RISC-V has 32 bits per instruction, 32 general purpose registers, 8 bits per memory location, and stores the least significant byte at the lowest memory address (little endian). RV32, used for smaller embedded applications, has 32 bits per register while RV64, used for high performance computing, has 64 bits per register. ScatterV uses the RV32 architecture.
 
