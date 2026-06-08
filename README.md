@@ -29,12 +29,12 @@ This repository builds upon my previous work, [learningVerilog](https://github.c
 ## Tools & Hardware
 | Category | Component / Tool | Description / Role |
 | :--- | :--- | :--- |
-| **Target Hardware** | RealDigital Boolean Board | Features a Xilinx Spartan-7 FPGA (XC7S50); utilized onboard Seven-Segment displays for I/O demo. |
-| **Hardware Description Language** | SystemVerilog | Used for RTL modeling of the single-cycle and pipelined RISC-V processor cores. |
-| **Development Environment** | Visual Studio Code | Primary IDE used for writing and managing the SystemVerilog HDL codebase. |
-| **Synthesis & Deployment** | Xilinx Vivado | Handled synthesis, implementation, timing analysis, and bitstream generation for the FPGA. |
-| **Simulation & Verification** | Icarus Verilog + GTKWave | Used for compiling RTL and analyzing waveform outputs during the verification phase. |
-| **Verification Software** | RISC-V Assembly Program | Custom demo assembly code written to validate instruction execution and hardware functionality. |
+| **Target Hardware** | RealDigital Boolean Board | Features a Xilinx Spartan-7 FPGA (XC7S50) with Seven-Segment displays for demo. |
+| **Hardware Description Language** | SystemVerilog | Used to model the pipelined RISC-V core. |
+| **Development Environment** | Visual Studio Code | Primary IDE used for writing SystemVerilog. |
+| **Synthesis & Deployment** | Xilinx Vivado | Handled synthesis, implementation, and bitstream generation for the FPGA. |
+| **Simulation & Verification** | Icarus Verilog + GTKWave | Used for compiling RTL and analyzing waveform outputs to verify logic. |
+| **Verification Software** | RISC-V Assembly | Created a custom demo assembly code that approximates closer to pi every second using a Monte Carlo simulation. |
 
 ---
 
