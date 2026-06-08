@@ -38,10 +38,31 @@ This repository builds upon my previous work, [learningVerilog](https://github.c
 
 ---
 ## Demo Program: Monte Carlo $\pi$ Approximation
-To verify the processor's capabilities, we implemented a Monte Carlo simulation in assembly. The program utilizes:
-* **`RND` Instruction:** Generates pseudorandom coordinates to test the LFSR logic.
-* **Arithmetic/Logic:** Performs coordinate squaring and comparison to determine points inside the unit circle.
-* **Hardware Interface:** Uses the seven-segment display to output the calculated approximation of $\pi$ in real-time.
+
+To verify correct processor behavior and stress-test the custom hardware, I implemented a Monte Carlo simulation written entirely in RISC-V assembly. 
+
+### Mathematical Principle
+The algorithm approximates the value of $\pi$ by generating random coordinate points $(x, y)$ within a square bounding box and determining the ratio of points that fall inside an inscribed unit quarter-circle. 
+
+For each generated coordinate pair, the hardware evaluates the standard circle equation:
+
+$$x^2 + y^2 \le r^2$$
+
+Since the simulation is normalized to a unit radius ($r = 1$), the processor checks the condition:
+
+$$x^2 + y^2 \le 1$$
+
+* **Inside the Circle:** If $x^2 + y^2 \le 1$, the point lies inside the quarter-circle, and an internal "hits" counter is incremented.
+* **Outside the Circle:** If $x^2 + y^2 > 1$, the point falls outside the circle, and only the total "samples" counter is incremented.
+
+The approximation of $\pi$ is derived from the ratio of points:
+
+$$\pi \approx 4 \times \frac{\text{hits}}{\text{total samples}}$$
+
+### Implementation Details
+* **`RND` Instruction:** Generates pseudorandom $x$ and $y$ coordinates on every clock cycle, thoroughly validating the hardware execution of the custom LFSR peripheral.
+* **Arithmetic Pipeline:** Performs fast coordinate squaring, addition, and conditional branching to determine point placement without stalling the pipeline.
+* **Real-Time Convergence:** Because the processor executes thousands of samples per second, **the approximation gets visibly more accurate every second.** As the sample size ($N$) grows over time, the statistical error decreases proportional to $1/\sqrt{N}$. The seven-segment display dynamically updates in real-time, showing the output shifting from a rough estimate to a highly stable, accurate convergence toward $3.1415$.
 <details>
   <summary>▶ <b>Click to expand FPGA Demo Video</b></summary>
   <br>
