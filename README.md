@@ -34,7 +34,7 @@ This repository builds upon my previous work, [learningVerilog](https://github.c
 | **Development Environment** | Visual Studio Code | Primary IDE used for writing SystemVerilog. |
 | **Synthesis & Deployment** | Xilinx Vivado | Handled synthesis, implementation, and bitstream generation for the FPGA. |
 | **Simulation & Verification** | Icarus Verilog + GTKWave | Used for compiling RTL and analyzing waveform outputs to verify logic. |
-| **Verification Software** | RISC-V Assembly | Created a custom demo assembly code that approximates closer to pi every second using a Monte Carlo plotting simulation. |
+| **Demo** | RISC-V Assembly | Created a custom demo assembly code that approximates closer to pi every second using a Monte Carlo plotting simulation. |
 
 ---
 ## Demo Program: Monte Carlo $\pi$ Approximation
