@@ -42,7 +42,8 @@ To verify the processor's capabilities, we implemented a Monte Carlo simulation 
 * **`RND` Instruction:** Generates pseudorandom coordinates to test the LFSR logic.
 * **Arithmetic/Logic:** Performs coordinate squaring and comparison to determine points inside the unit circle.
 * **Hardware Interface:** Uses the seven-segment display to output the calculated approximation of $\pi$ in real-time.
-[![Watch the video](https://upload.wikimedia.org/wikipedia/commons/0/0b/RedDot_Burger.jpg))](https://www.youtube.com/watch?v=kfW94tNMFkA)
+[![Watch the video](https://img.youtube.com/vi/kfW94tNMFkA/0.jpg)](https://www.youtube.com/watch?v=kfW94tNMFkA)
+
 ---
 
 ## Instruction Set Architecture
