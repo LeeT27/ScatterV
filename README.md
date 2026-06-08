@@ -50,10 +50,9 @@ Since the simulation is normalized to a unit radius ($r = 1$), the processor che
 
 $$x^2 + y^2 \le 1$$
 
-* **Inside the Circle:** If $x^2 + y^2 \le 1$, the point lies inside the quarter-circle, and an internal "hits" counter is incremented.
-* **Outside the Circle:** If $x^2 + y^2 > 1$, the point falls outside the circle, and only the total "samples" counter is incremented.
+An internal "hits" counter is incremented everytime it lands inside and a total "samples counter" is incremented everytime, independent of where it lands.
 
-The approximation of $\pi$ is derived from the ratio of points:
+The approximation of $\pi$ is found through the ratio of points:
 
 $$\pi \approx 4 \times \frac{\text{hits}}{\text{total samples}}$$
 
