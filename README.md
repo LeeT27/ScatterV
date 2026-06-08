@@ -42,7 +42,7 @@ This repository builds upon my previous work, [learningVerilog](https://github.c
 To verify correct processor behavior, I implemented a Monte Carlo simulation written entirely in RISC-V assembly. The main star of the show in this simulation is the custom `RND` instruction that constantly creates pseudorandom coordinates.
 
 ### Mathematical Principle
-The program approximates $\pi$ by generating random coordinate points $(x, y)$ within a square area bounded by (0,0) and (1,1) and determining the ratio of points that fall inside the shaded quarter circle, calculated using the following circle equation:
+The program approximates $\pi$ by generating random coordinate points $(x, y)$ within a square area bounded by (0,0) and (1,1) every 0.1 second and determining the ratio of points that fall inside the shaded quarter circle, calculated using the following circle equation:
 
 $$x^2 + y^2 \le 1$$
 
