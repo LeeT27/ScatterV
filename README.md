@@ -87,7 +87,9 @@ The ratio converges to π as the sample size approaches ∞,
 | **J-Type** | JAL | `1101111` | N/A | N/A |
 | **I-Type** | JALR | `1100111` | `000` | N/A |
 | **Custom** | RND | `0001011` | N/A | N/A |
-<img width="700" alt="image" src="https://github.com/user-attachments/assets/0081d60a-b194-4487-b2cc-d86e161800de" />
+<div align="center">
+  <img width="700" alt="image" src="https://github.com/user-attachments/assets/0081d60a-b194-4487-b2cc-d86e161800de" />
+</div>
 
 ---
 
