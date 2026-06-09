@@ -77,7 +77,7 @@ The ratio converges to π as the sample size approaches ∞,
 ### Instruction Set Architecture
 | Instruction Type | Instructions | Opcode | funct3 | funct7 |
 | :--- | :--- | :--- | :--- | :--- |
-| **R-Type** | ADD, SUB, SLL, SLT, SLTU, XOR, SRL, SRA, OR, AND | `0110011` | Selects ALU op | Differentiates ADD/SUB/SRA |
+| **R-Type** | ADD, SUB, SLL, SLT, SLTU, XOR, SRL, SRA, OR, AND | `0110011` | Selects ALU op | Differentiates SUB/SRA |
 | **I-Type** | ADDI, SLTI, SLTIU, XORI, ORI, ANDI, SLLI, SRLI, SRAI | `0010011` | Selects ALU op | N/A |
 | **Load** | LB, LH, LW | `0000011` | Sets data size | N/A |
 | **Store** | SB, SH, SW | `0100011` | Sets data size | N/A |
@@ -87,7 +87,7 @@ The ratio converges to π as the sample size approaches ∞,
 | **J-Type** | JAL | `1101111` | N/A | N/A |
 | **I-Type** | JALR | `1100111` | `000` | N/A |
 | **Custom** | RND | `0001011` | N/A | N/A |
-<img width="500" alt="image" src="https://github.com/user-attachments/assets/0081d60a-b194-4487-b2cc-d86e161800de" />
+<img width="700" alt="image" src="https://github.com/user-attachments/assets/0081d60a-b194-4487-b2cc-d86e161800de" />
 
 ---
 
