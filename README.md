@@ -181,8 +181,14 @@ initial begin
 end
 ```
 
-### Part 1 Reflection
-When designing ScatterV, I didn't realize how big of a jump going from my old CPU to RISC-V was. The new instruction types such as branching, upper intermediates, and new jumps quickly felt overwhelming. Figuring out the new multiplexers for control signals and operands was frustrating. Specifically, it was difficult designing wb_sel and pc_sel since the upper intermediate (AUIPC/LUI) and subroutine call instructions (JAL) demanded more signals to satisfy their cases. Another frustrating moment was how only two R-type instructions require func7[5] to be 1, which are SUB and SRA, in which I had to disable func7 when it's not an R-type instruction. For example, if I didn't disable func7 for I-type, using ADDI where bit 30 is 1 would cause unintentional subtraction when I meant to use the immediate range with bit 30 in it. One more frustrating challenge in this part was adding half word and single byte load/store instructions because of having to manage offsets if the memory address isn't a factor of 4, since the RAM is an array of words, not bytes. One thing that definitely helped overall was working on the top module and control unit first as they gave me better visualization of how the signals should interact in the leftover modules. Constantly testing module functionality in EDAPlayground also allowed me to deduct bugs.
+### Part 1 Reflection Notes
+- Felt like a big jump going from my old custom ISA CPU to the official RISC-V ISA because of new instruction types such as branching, upper intermediates, and JALR
+- Starting with the top module and control unit first helped me visualize the I/O of the other modules easily
+- New instruction types meant a lot more multiplexers in the top module to select next pc, writeback, operands, and more depending on the control signals
+- A lot of new control signals seemed difficult to track and sometimes a whole new signal was needed for a single instruction
+- One frustrating moment was when I had to implement func7 extensions for SUB, SRA, and SRAI, since there were more than 8 arithmetic operations, where not only did I have to allow func3 to only be passed in R and I type instructions, I had to specifically disable func3 for ADDI so that the immediate value doesn't trigger an unintentional subtract.
+- It was difficult implementing byte, half word, and full word stores and loads because I had to manage offsets if the selected memory address wasn't a factor of 4
+- What helped me to debug these was working was constantly using EDAPlayground and appending register signals to test each individual instructions and making sure the correct control signals and multiplexer results had correct behaviour
 
 ## Part 2: Pipeline architecture and hazard mitigation
 This portion of the project is about converting my functional single cycle RISC-V core into a pipelined core in order to increase the maximum clock speed. A major issue with my first processor a year back was not only that it was a single cycle, where each instruction needed to complete the 5 stages before the next instruction, but also that heavy instructions such as `MULT` and `DIV` made the worst case propogation delay much longer. I pipelined scatterV to minimize the worst propogation delay using the following pipeline system:
