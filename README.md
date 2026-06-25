@@ -199,6 +199,8 @@ This portion of the project is about pipelining my functional single cycle RISC-
 4. **Memory Access (MEM):** Reads/writes the program memory for loads/stores
 5. **Write Back (WB):** Writes the final result, selected by wb_sel, into the destination register (`rd`).
 
+Here is a good visual that helped me understand the flow of instructions using single-cycle vs pipelining:
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/e86e4c30-aaab-4ef0-98cd-d5abffc16312" />
 
 ## Part 3: Hardware synthesis and FPGA demo
 
