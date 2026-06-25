@@ -29,12 +29,12 @@ This repository builds upon my previous work, [learningVerilog](https://github.c
 ## Tools & Hardware
 | Category | Component / Tool | Description / Role |
 | :--- | :--- | :--- |
-| **Target Hardware** | RealDigital Boolean Board | Features a Xilinx Spartan-7 FPGA (XC7S50) with Seven-Segment displays for demo. |
-| **Hardware Description Language** | SystemVerilog | Used to model the pipelined RISC-V core. |
-| **Development Environment** | Visual Studio Code | Primary IDE used for writing SystemVerilog. |
-| **Synthesis & Deployment** | Xilinx Vivado | Handled synthesis, implementation, and bitstream generation for the FPGA. |
-| **Simulation & Verification** | EDAPlayground | Used for compiling RTL and analyzing waveform outputs to verify logic. |
-| **Demo** | RISC-V Assembly | Created a custom demo assembly code that approximates closer to pi every second using a Monte Carlo plotting simulation. |
+| **Target Hardware** | RealDigital Boolean Board | Features a Xilinx Spartan-7 FPGA (XC7S50) with Seven-Segment displays for demo |
+| **Hardware Description Language** | SystemVerilog | Used to model the pipelined RISC-V core |
+| **Development Environment** | Visual Studio Code | Primary IDE used for writing SystemVerilog |
+| **Synthesis & Deployment** | Xilinx Vivado | Handled synthesis, implementation, and bitstream generation for the FPGA |
+| **Simulation & Verification** | EDAPlayground | Used for compiling RTL and analyzing waveform outputs to verify logic |
+| **Demo** | RISC-V Assembly | Created a custom demo assembly code that approximates closer to pi every second using a Monte Carlo plotting simulation |
 
 ---
 ## Demo Program: Monte Carlo $\pi$ Approximation
