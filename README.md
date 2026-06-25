@@ -235,7 +235,11 @@ I replaced old registers with 4 new groups of hardware registers to transfer dat
 * `mem_wb_control`: `reg_write` and `wb_sel`.
 
 ### Control Signal Optimization
-In the pipelined model, I made single bit-vector value to represent all the control signals rather than a bunch of individual wires so that I could easily pass one value between pipeline register groups and then manually select bits to be passed per stage
+In the pipelined model, I made single bit-vector value to represent all the control signals rather than a bunch of individual wires so that I could easily pass one value between pipeline register groups and then manually select bits to be passed per stage. This is the format of the control value:
+
+| Bit Index | [7] | [6:5] | [4] | [3] | [2] | [1:0] |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Signal Name** | `reg_write` | `wb_sel` | `mem_write` | `mem_read` | `rnd_sel` | `alu_op` |
 
 ### Data Hazards
 
