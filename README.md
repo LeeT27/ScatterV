@@ -205,7 +205,8 @@ Here is a good visual that helped me understand the flow of instructions using s
 
 While it is true that pipelining requires slightly more clock cycles due to the filling and emptying of the pipeline, the quicker clock speed overrides and runs long programs more efficiently
 
-I used 4 groups of hardware registers to transfer data between the 5 stages directly using synchronized `always_ff` blocks in `top_module`:
+### Pipeline Registers
+I replaced old registers with 4 new groups of hardware registers to transfer data between the 5 stages directly using synchronized `always_ff` blocks in `top_module`:
 
 #### 1. IF/ID
 * `if_id_pc`
@@ -232,6 +233,11 @@ I used 4 groups of hardware registers to transfer data between the 5 stages dire
 * `mem_wb_mem_data`
 * `mem_wb_rd`
 * `mem_wb_control`: `reg_write` and `wb_sel`.
+
+### Control Signal Optimization
+In the pipelined model, I made single value to represent all the control signals rather than a bunch of individual wires so that I could easily pass one value between pipeline register groups and then manually select bits to be passed per stage
+
+### Data Hazard
 
 ---
 
