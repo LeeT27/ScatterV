@@ -260,6 +260,11 @@ When pipelining the processesor, overlapping the execution of multiple instructi
 * **The Hazard:** A structural conflict occurs if two overlapping instructions attempt to access the same physical hardware resource during the same clock cycle—such as fetching a new instruction while an older instruction reads an array variable from data memory.
 * **The Solution:** This is **completely resolved by design** in ScatterV. Because the processor utilizes a dual-port/split-memory Harvard architecture (a dedicated `instruction_memory` block for the **IF** stage and a completely separate 4 KB data RAM for the **MEM** stage), simultaneous instruction fetches and data read/write operations execute concurrently without any resource contention.
 
+### Testing #1
+
+### Part 2 Reflection Notes
+
+
 ---
 
 ## Part 3: Hardware synthesis and FPGA demo
