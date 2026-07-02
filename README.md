@@ -297,6 +297,7 @@ If all 3 of these conditions are satisfied for an operand, `ex_mem_rd' is routed
 2. `ex_mem_rd != 0` (`NOP` or `x0` targets don't need forwarding)
 3. `(mem_wb_rd == id_ex_rs1)||mem_wb_rd == id_ex_rs2)` (The destination register must match a source register)
 If all 3 of these conditions are satisfied for an operand, `mem_wb_rd' is routed into ALU input, corresponding to the operand with the matched address.
+
 **Stalling unit:** check:
 1. `id_ex_mem_read == 1`
 
