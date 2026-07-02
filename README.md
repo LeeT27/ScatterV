@@ -333,7 +333,7 @@ If all 3 of these conditions are satisfied for an operand, `mem_wb_rd' is routed
 * **The Hazard:** If a branch or jump is taken, the instructions tagged along after that instruction (contents in **IF** and **ID** stages) should no longer be in the pipeline.
 * **Solution:** Flushing unit
   
-**Flushing unit:** Perform a flush signal on the next clock edge that sets if_id_instruction to 32'h00000013 (NOP) and id_ex_control to 32'h00000000, essential eliminating the upcoming instructions in the pipeline
+**Flushing unit:** Perform a flush signal on the next clock edge that sets if_id_instruction to `32'h00000013` (NOP) and id_ex_control to `32'h00000000`, essential eliminating the upcoming instructions in the pipeline
 
 ### 🔵 Structural
 * **The Hazard:** Two instructions try to read RAM in the same clock cycle when RAM only has one read (instruction fetch paired with load instruction).
