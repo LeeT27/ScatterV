@@ -308,6 +308,7 @@ When pipelining the processesor, overlapping the execution of multiple instructi
 ### 🔴 EX-to-EX Data
 * **The Hazard:** An instruction in the **EX** stage requires an operand calculated by the immediate preceding instruction, which is currently sitting in the **MEM** stage and hasn't been written back yet.
 * **Solution:** Forwarding unit
+  
 **Forwarding unit:** For each `ID_EX` operand, check:
 1. `ex_mem_reg_write == 1` (Writeback instructions only)
 2. `ex_mem_rd != 0` (`NOP` or `x0` targets don't need forwarding)
@@ -317,6 +318,7 @@ If all 3 of these conditions are satisfied for an operand, `ex_mem_rd' is routed
 ### 🟡 MEM-to-EX Data
 * **The Hazard:** An instruction in the **EX stage** requires an operand calculated two cycles prior (currently sitting at the **WB stage** boundary), or it follows a back-to-back memory load (`LW`). The data isn't loaded until the end of the **MEM stage**
 * **Solution:** Forwarding unit and stalling unit
+  
 **Forwarding unit:** For each `ID_EX` operand, check:
 1. `ex_mem_reg_write == 1` (Writeback instructions only)
 2. `ex_mem_rd != 0` (`NOP` or `x0` targets don't need forwarding)
@@ -330,6 +332,7 @@ If all 3 of these conditions are satisfied for an operand, `mem_wb_rd' is routed
 ### 🟢 Control
 * **The Hazard:** If a branch or jump is taken, the instructions tagged along after that instruction (contents in **IF** and **ID** stages) should no longer be in the pipeline.
 * **Solution:** Flushing unit
+  
 **Flushing unit:** Perform a flush signal on the next clock edge that sets if_id_instruction to 32'h00000013 (NOP) and id_ex_control to 32'h00000000, essential eliminating the upcoming instructions in the pipeline
 
 ### 🔵 Structural
