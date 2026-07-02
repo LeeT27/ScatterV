@@ -58,7 +58,7 @@ $$\pi \approx 4 \times \frac{\text{hits}}{\text{total samples}}$$
 
 The ratio converges to π as the sample size approaches ∞, 
 
-For the sake of hardware, I stuck to displaying only hits and sample count so that decimals don't need to be involved
+For the sake of hardware, I stuck to displaying only hits and sample count on FPGA so that decimals don't need to be involved.
 
 [https://img.youtube.com/vi/kfW94tNMFkA/0.jpg](https://upload.wikimedia.org/wikipedia/commons/0/0b/RedDot_Burger.jpg)
 
