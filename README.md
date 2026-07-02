@@ -170,7 +170,7 @@ end
 It worked! :) x3 successfully has the value 0x0002 at the end of the program. I forgot to append the LSFR signal, but the register is successfully outputting pseudorandom numbers every clock cycle.
 
 ### Testing #2
-Here is a program that squares a random number between 1 and 8
+Here is a second program that squares a random number between 1 and 8 amd stores the value into x3
 ```systemverilog
 initial begin
     mem[0]  = 32'h0000008B; // rnd x1              (x1 = fresh random 32-bit number)
@@ -192,7 +192,30 @@ end
 
 <img width="700" alt="image" src="https://github.com/user-attachments/assets/60ea3478-94e5-40d5-8257-5a40829bc2e1" />
 
-This one also worked! The random number masked between 0x0007 and the LSFR was 0x0004 (4 in decimal) and then was squared to store the value 0x0010 (16 in decimal) into x3. It was very assuring seeing that the randomization system is correctly used in a program.
+This one also worked! The random number masked between 0x0007 and the LSFR was 0x0003 (3 in decimal), added by 1, and then was squared to store the value 0x0010 (16 in decimal) into x3. It was very assuring seeing that the randomization system is correctly used in a program.
+
+### Testing #3
+This final test program performs the monte carlo pi approximation and then stores the value into x3
+```systemverilog
+initial begin
+    mem[0]  = 32'h0000008B; // rnd x1              (x1 = fresh random 32-bit number)
+    mem[1]  = 32'h0070F093; // andi x1, x1, 7       (x1 = x1 & 0x7, range 0-7)
+    mem[2]  = 32'h00108093; // addi x1, x1, 1       (x1 = x1 + 1, range 1-8)
+    mem[3]  = 32'h00000233; // add x4, x0, x0       (x4 = 0, running total)
+    mem[4]  = 32'h000002B3; // add x5, x0, x0       (x5 = 0, loop counter)
+    mem[5]  = 32'h00128863; // loop: beq x5, x1, done  (exit once counter == x1)
+    mem[6]  = 32'h00120233; //   add x4, x4, x1     (total += x1)
+    mem[7]  = 32'h00128293; //   addi x5, x5, 1     (counter += 1)
+    mem[8]  = 32'hFF5FF06F; //   jal x0, loop       (jump back to loop)
+    mem[9]  = 32'h000201B3; // done: add x3, x4, x0 (x3 = x1^2, final result)
+    mem[10] = 32'h0000006F; // j done (jump to current PC forever)
+    for (int i = 11; i < 64; i++) begin
+        mem[i] = 32'h00000013; // NOP (addi x0, x0, 0)
+    end
+end
+```
+
+This 
 
 ### Part 1 Reflection Notes
 - It felt like a big jump going from my old custom ISA CPU to the official RISC-V ISA because of new instruction types such as branching, upper intermediates, and JALR
