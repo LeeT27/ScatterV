@@ -278,21 +278,24 @@ In the pipelined model, I made single bit-vector value to represent all the cont
 | **Signal Name** | `reg_write` | `wb_sel` | `mem_write` | `mem_read` | `rnd_sel` | `alu_op` |
 
 ### Data Hazards
-When pipelining the processesor, overlapping the execution of multiple instructions at once introduces data, control, and structural hazards that cause unexpected behaviour. Here are all the hazards I mitigated:
+When pipelining the processesor, overlapping the execution of multiple instructions at once introduces data, control, and structural hazards that cause unexpected behaviour. Here are the 4 main hazards I mitigated:
 
-### 🔴 EX-to-EX Forwarding (Data Hazard)
-* **The Hazard:** An instruction in the **Execute (EX)** stage requires an operand calculated by the immediate preceding instruction, which is currently sitting in the **Memory (MEM)** stage and has not yet been committed to the register file.
-* **Solution:** The combinational Forwarding Unit continuously compares `ex_mem_rd` against `id_ex_rs1` and `id_ex_rs2`. If a destination match occurs and `reg_write` is active, the unit intercepts the freshly calculated data directly from the `EX/MEM` register and routes it straight back into the ALU inputs with zero stall penalty.
+### 🔴 EX-to-EX Data
+* **The Hazard:** An instruction in the **EX** stage requires an operand calculated by the immediate preceding instruction, which is currently sitting in the **MEM** stage and hasn't been written back yet.
+* **Solution:** Create a forwarding units per `ID_EX` operand that constantly tests these combinational comparisons:
+1. ex_mem_reg_write == 1, writeback instructions only
+2. ex_mem_rd != 0, NOP doesn't need forwarding
+3. (ex_mem_rd == id_ex_rs1)||(ex_mem_rd == id_ex_rs2), if destinations match a source register, route `EX/MEM` data into ALU input, corresponding to the operand with the matched address.
 
-### 🟡 MEM-to-EX Forwarding & Load Stalling (Data Hazard)
+### 🟡 MEM-to-EX Data
 * **The Hazard:** An instruction in the **EX** stage needs an operand calculated two cycles prior (currently at the **WB** boundary), or it follows a back-to-back memory load (`LW`). Because data pulled from RAM is not physically available until the end of the **MEM** stage, it cannot be forwarded backward in time to an immediate sequential instruction.
 * **Solution:** For regular multi-cycle arithmetic dependencies, the Forwarding Unit routes data directly from the `MEM/WB` register back into the ALU inputs. For a load-use conflict, the Hazard Detection Unit forces a **1-cycle hardware stall**—freezing the PC/Fetch stage and injecting a NOP "bubble" into `ID/EX`—delaying the instruction by one cycle so that the MEM-to-EX forwarding path can safely capture the data.
 
-### 🟢 Pipeline Flushing (Control Hazard)
-* **The Hazard:** A branch or jump instruction evaluates its condition in the execution stage and determines that the branch is taken. Consequently, the sequential instructions that were already speculative fetched behind it in the **IF** and **ID** stages are completely incorrect.
-* **Solution:** The core's control logic asserts a synchronous flush signal on the next clock edge. This clears out the early pipeline registers (`if_id_instruction` and `id_ex_control`) to all zeros, converting the invalid instructions into hardware NOPs (`addi x0, x0, 0`) while the Program Counter is redirected to the correct target address.
+### 🟢 Control
+* **The Hazard:** If a branch or jump is taken, the instructions tagged along after that instruction (contents in **IF** and **ID** stages) should no longer be in the pipeline.
+* **Solution:** Perform a flush signal on the next clock edge that clears out the early pipeline registers to all zeros, converting the invalid instructions into hardware NOPs (`addi x0, x0, 0`)
 
-### 🔵 Split Harvard Architecture (Structural Hazard)
+### 🔵 Structural
 * **The Hazard:** Two instructions try to read RAM in the same clock cycle when RAM only has one read (instruction fetch paired with load instruction).
 * **Solution:** This is already solved because ScatterV uses splits memory modules. instruction_memory for instruction fetches, and program_memory for loading and reading
 
