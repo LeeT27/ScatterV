@@ -173,7 +173,7 @@ end
 It worked! :) x3 successfully has the value 0x0002 at the end of the program. I forgot to append the LSFR signal, but the register is successfully outputting pseudorandom numbers every clock cycle.
 
 ### Testing #2
-Here is a second program that squares a random number between 1 and 8 amd stores the value into x3
+Here is a second program that squares a random number between 1 and 8 and stores the value into x3
 ```systemverilog
 initial begin
     mem[0]  = 32'h0000008B; // rnd x1              (x1 = fresh random 32-bit number)
