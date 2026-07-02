@@ -216,7 +216,7 @@ initial begin
     end
 end
 ```
-<img width="700" alt="image" src="https://github.com/user-attachments/assets/db72ffdd-5fc8-4cce-9310-b30e35463949" />
+<img width="1000" alt="image" src="https://github.com/user-attachments/assets/db72ffdd-5fc8-4cce-9310-b30e35463949" />
 
 Haha. Insanely large waveform. The first sample iteration loop took ~10,000 clock cycles, and EDAPlayground doesn't want to show more than 20,000 clock cycles. Moving forward, I will only stick with FPGA demos for this program because the abundance of data to be displayed on EDA. As I zoom in, the behaviour is working correctly for the one cycle, where it is correctly squaring two random numbers between 0 and 255, adding them, and then correctly comparing the sum to the threshold of 65025 to setermine a hit or a miss.
 
@@ -304,12 +304,6 @@ If all 3 of these conditions are satisfied for an operand, `mem_wb_rd' is routed
 **Stalling unit:** check:
 1. `id_ex_mem_read == 1`
 
-
-
-
-
-*   **For multi-cycle arithmetic dependencies:** The Forwarding Unit constantly tests if **`mem_wb_reg_write == 1`**, **`mem_wb_rd != 0`**, and a source register matches (**`mem_wb_rd == id_ex_rs1`** or **`mem_wb_rd == id_ex_rs2`**). If satisfied, **`mem_wb_data`** is routed straight into the corresponding **ALU input**.
-*   **For load-use conflicts:** If the instruction in EX is a load (**`id_ex_mem_read == 1`**) and its destination matches a source (**`id_ex_rd == if_id_rs1`** or **`id_ex_rd == if_id_rs2`**), the Hazard Detection Unit forces a **1-cycle hardware stall**—freezing the PC/Fetch stage and injecting a `NOP` bubble into **ID/EX**—allowing the subsequent MEM-to-EX path to safely capture the data.
 
 ### 🟢 Control
 * **The Hazard:** If a branch or jump is taken, the instructions tagged along after that instruction (contents in **IF** and **ID** stages) should no longer be in the pipeline.
