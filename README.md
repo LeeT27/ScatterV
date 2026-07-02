@@ -190,7 +190,7 @@ initial begin
 end
 ```
 
-<img width="700"alt="image" src="https://github.com/user-attachments/assets/72c06dff-32bf-40bb-84ce-006f783bcb76" />
+<img width="700" alt="image" src="https://github.com/user-attachments/assets/60ea3478-94e5-40d5-8257-5a40829bc2e1" />
 
 This one also worked! The random number masked between 0x0007 and the LSFR was 0x0004 (4 in decimal) and then was squared to store the value 0x0010 (16 in decimal) into x3. It was very assuring seeing that the randomization system is correctly used in a program.
 
