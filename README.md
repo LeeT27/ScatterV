@@ -282,10 +282,11 @@ When pipelining the processesor, overlapping the execution of multiple instructi
 
 ### 🔴 EX-to-EX Data
 * **The Hazard:** An instruction in the **EX** stage requires an operand calculated by the immediate preceding instruction, which is currently sitting in the **MEM** stage and hasn't been written back yet.
-* **Solution:** Create a forwarding units per `ID_EX` operand that constantly tests these combinational comparisons:
+* **Solution:** Create a forwarding unit per `ID_EX` operand that constantly tests these combinational comparisons:
 1. ex_mem_reg_write == 1, writeback instructions only
 2. ex_mem_rd != 0, NOP doesn't need forwarding
-3. (ex_mem_rd == id_ex_rs1)||(ex_mem_rd == id_ex_rs2), if destinations match a source register, route `EX/MEM` data into ALU input, corresponding to the operand with the matched address.
+3. (ex_mem_rd == id_ex_rs1)||(ex_mem_rd == id_ex_rs2), if destinations must match a source register
+If all 3 of these conditions are satisfied, `ex_mem_rd' is routed into ALU input, corresponding to the operand with the matched address.
 
 ### 🟡 MEM-to-EX Data
 * **The Hazard:** An instruction in the **EX** stage needs an operand calculated two cycles prior (currently at the **WB** boundary), or it follows a back-to-back memory load (`LW`). Because data pulled from RAM is not physically available until the end of the **MEM** stage, it cannot be forwarded backward in time to an immediate sequential instruction.
