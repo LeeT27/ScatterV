@@ -247,7 +247,7 @@ Haha. Insanely large waveform. The first sample iteration loop took ~10,000 cloc
 - Starting with the top module and control unit first helped me visualize the I/O of the other modules easily
 - New instruction types meant a lot more multiplexers in the top module to select next pc, writeback, operands, and more depending on the control signals
 - A lot of new control signals seemed difficult to track and sometimes a whole new signal was needed for a single instruction
-- One frustrating moment was when I had to implement func7 extensions for SUB, SRA, and SRAI, since there were more than 8 arithmetic operations, where not only did I have to allow func3 to only be passed in R and I type instructions, I had to specifically disable func3 for ADDI so that the immediate value doesn't trigger an unintentional subtract.
+- One frustrating moment was when I had to implement funct7 extensions for SUB, SRA, and SRAI, since there were more than 8 arithmetic operations, where not only did I have to allow func3 to only be passed in R and I type instructions, I had to specifically disable funct3 for ADDI so that the immediate value doesn't trigger an unintentional subtract.
 - It was difficult implementing byte, half word, and full word stores and loads because I had to manage offsets if the selected memory address wasn't a factor of 4
 - What helped me to debug these was working was constantly using EDAPlayground and appending register signals to test each individual instructions and making sure the correct control signals and multiplexer results had correct behaviour
 
