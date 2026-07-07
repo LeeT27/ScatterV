@@ -103,18 +103,18 @@ For the sake of hardware, I stuck to displaying only hits and sample count on FP
 
 ## Control Signal Reference
 
-| Instruction | `alu_op` | `alu_src` | `mem_read` | `mem_write` | `reg_write` | `wb_sel` | `pc_sel` |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **R-Type** | 10 | 0 | 0 | 0 | 1 | 00 | 00 |
-| **ADDI** | 10 | 1 | 0 | 0 | 1 | 00 | 00 |
-| **LOAD** | 00 | 1 | 1 | 0 | 1 | 01 | 00 |
-| **STORE** | 00 | 1 | 0 | 1 | 0 | XX | 00 |
-| **BRANCH** | 01 | 0 | 0 | 0 | 0 | XX | 10 |
-| **LUI** | XX | 1 | 0 | 0 | 1 | 11 | 00 |
-| **AUIPC** | 00 | 1 | 0 | 0 | 1 | 00 | 00 |
-| **JAL** | XX | 1 | 0 | 0 | 1 | 10 | 01 |
-| **JALR** | XX | 1 | 0 | 0 | 1 | 10 | 11 |
-| **RND** | 11 | X | 0 | 0 | 1 | 00 | 00 |
+| Instruction | `alu_src` | `alu_op` | `auipc_en` | `mem_read` | `mem_write` | `reg_write` | `wb_sel` | `pc_sel` |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **R-Type** | 0 | 10 | 0 | 0 | 0 | 1 | 00 | 00 |
+| **ADDI** | 1 | 10 | 0 | 0 | 0 | 1 | 00 | 00 |
+| **LOAD** | 1 | 00 | 0 | 1 | 0 | 1 | 01 | 00 |
+| **STORE** | 1 | 00 | 0 | 0 | 1 | 0 | XX | 00 |
+| **BRANCH** | 0 | 01 | 0 | 0 | 0 | 0 | XX | 10 |
+| **LUI** | 1 | XX | 0 | 0 | 0 | 1 | 11 | 00 |
+| **AUIPC** | 1 | 00 | 1 | 0 | 0 | 1 | 00 | 00 |
+| **JAL** | 1 | XX | 0 | 0 | 0 | 1 | 10 | 01 |
+| **JALR** | 1 | XX | 0 | 0 | 0 | 1 | 10 | 11 |
+| **RND** | X | 11 | 0 | 0 | 0 | 1 | 00 | 00 |
 
 * **wb_sel:** `00` = ALU, `01` = DataMem, `10` = PC+4, `11` = Immediate.
 * **pc_sel:** `00` = PC+4, `01` = JAL, `10` = Branch, `11` = JALR.
