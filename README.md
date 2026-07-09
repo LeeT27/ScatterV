@@ -271,17 +271,17 @@ While pipelining has a slight latency when filling and emptying the pipeline, th
 ### Pipeline Registers
 I replaced all the old registers in `top_module` with new completely new register groups that either get their value from flip flops or combinational circuits:
 
-| Pipeline Stage | Registers / Signals |
+| Pipeline Stage | Main Registers / Signals |
 | :--- | :--- |
-| **IF (Instruction Fetch)** | `if_pc`<br>`if_pc_next`<br>`if_instruction` |
-| **IF/ID Pipeline Register** | `if_id_pc`<br>`if_id_instruction` |
-| **ID (Instruction Decode)** | `id_rs1`<br>`id_rs2`<br>`id_opcode`<br>`id_rs1_data`<br>`id_rs2_data`<br>`id_imm`<br>`id_control` |
-| **ID/EX Pipeline Register** | `id_ex_pc`<br>`id_ex_rs1_data`<br>`id_ex_rs2_data`<br>`id_ex_imm`<br>`id_ex_opcode`<br>`id_ex_rs1`<br>`id_ex_rs2`<br>`id_ex_rd`<br>`id_ex_funct7`<br>`id_ex_funct3`<br>`id_ex_control` |
-| **EX (Execute)** | `ex_alu_result`<br>`ex_operand1`<br>`ex_operand2`<br>`ex_rs1_value`<br>`ex_rs2_value`<br>`ex_zero_flag`<br>`ex_less_than`<br>`ex_branch_condition_met` |
-| **EX/MEM Pipeline Register** | `ex_mem_pc`<br>`ex_mem_alu_result`<br>`ex_mem_rs2_data`<br>`ex_mem_imm`<br>`ex_mem_rd`<br>`ex_mem_funct3`<br>`ex_mem_control` |
-| **MEM (Memory Access)** | `ex_mem_ram_read_en`<br>`ex_mem_ram_write_en`<br>`mem_wb_read_data` |
-| **MEM/WB Pipeline Register** | `mem_wb_pc`<br>`mem_wb_alu_result`<br>`mem_wb_read_data`<br>`mem_wb_imm`<br>`mem_wb_rd`<br>`mem_wb_control` |
-| **WB (Write Back)** | `wb_rd_data`<br>`mem_wb_reg_write_en` |
+| **IF** | `if_pc`, `if_pc_next`, `if_instruction` |
+| **IF/ID** | `if_id_pc`, `if_id_instruction` |
+| **ID** | `id_rs1`, `id_rs2`, `id_opcode`, `id_rs1_data`, `id_rs2_data`, `id_imm`, `id_control` |
+| **ID/EX** | `id_ex_pc`, `id_ex_rs1_data`, `id_ex_rs2_data`, `id_ex_imm`, `id_ex_opcode`, `id_ex_rs1`, `id_ex_rs2`, `id_ex_rd`, `id_ex_funct7`, `id_ex_funct3`, `id_ex_control` |
+| **EX** | `ex_alu_result`, `ex_operand1`, `ex_operand2`, `ex_rs1_value`, `ex_rs2_value`, `ex_zero_flag`, `ex_less_than`, `ex_branch_condition_met` |
+| **EX/MEM** | `ex_mem_pc`, `ex_mem_alu_result`, `ex_mem_rs2_data`, `ex_mem_imm`, `ex_mem_rd`, `ex_mem_funct3`, `ex_mem_control` |
+| **MEM** | `ex_mem_ram_read_en`, `ex_mem_ram_write_en`, `mem_wb_read_data` |
+| **MEM/WB** | `mem_wb_pc`, `mem_wb_alu_result`, `mem_wb_read_data`, `mem_wb_imm`, `mem_wb_rd`, `mem_wb_control` |
+| **WB** | `wb_rd_data`, `mem_wb_reg_write_en` |
 
 ### Control Signal Optimization
 In the pipelined model, I made single bit-vector value to represent all the control signals rather than a bunch of individual wires so that I could easily pass one value between pipeline register groups and then manually select bits to be passed per stage. This is the format of the control value:
