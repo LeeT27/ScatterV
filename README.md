@@ -269,7 +269,7 @@ Here is a good visual that helped me understand the flow of instructions using s
 While pipelining has a slight latency when filling and emptying the pipeline, the minimized worst case propagation delay allows for a much higher maximum operating frequency, running programs more efficiently.
 
 ### Pipeline Registers
-I replaced all the old registers in `top_module` with new completely new register groups that either get their value from flip flops or combinational circuits:
+I replaced all the old registers in `top_module` with new completely new register groups that transfer data across stages. Double stage names (e.g., `id_ex`, `ex_mem`, `mem_wb`) represent pipeline registers that use flip-flops to pass data. Single stage names represent internal signal values within each stage, determined by combinational logic. Here is the new register table:
 
 | Pipeline Stage | Main Registers / Signals |
 | :--- | :--- |
