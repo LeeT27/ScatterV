@@ -292,7 +292,7 @@ In the pipelined model, I replaced the old system of individual control signals 
 | `mem_wb_ctrl_t` | `reg_write`, `wb_sel` |
 
 ### Data Hazards
-When pipelining the processesor, overlapping the execution of multiple instructions at once introduces data, control, and structural hazards that cause unexpected behaviour. Here are the 4 main hazards I mitigated:
+When pipelining the processesor, overlapping the execution of multiple instructions at once introduces data, control, and structural hazards that cause unexpected behaviour. Here are the 5 main hazards I mitigated:
 
 ### 🔴 EX-to-EX Data
 * **The Hazard:** An instruction in the **EX** stage requires an operand calculated by the immediate preceding instruction, which is currently sitting in the **MEM** stage and hasn't been written back yet.
