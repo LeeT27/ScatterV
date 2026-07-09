@@ -155,7 +155,7 @@ Since RISC-V registers are 32 bits, a primitive polynomial of degree n = 32 will
         feedback_bit = (lfsr_reg == 32'b0) ? 1'b1 : (lfsr_reg[31] ^ lfsr_reg[21] ^ lfsr_reg[1] ^ lfsr_reg[0]);
     end
 ```
-### Testing #1
+### Testing (single-cycle) #1
 For testing throughout this project, I just used a general testbench that outputs a reset and clock. Most of the verification when creating this is waveform analysis. Here is a program that performs a simple 1+1=2. Load 1 into x1, 1 into x2, add them together and save into x3. End the program by looping PC to never end:
 
 ```systemverilog
@@ -174,7 +174,7 @@ end
 
 It worked! :) x3 successfully has the value 0x0002 at the end of the program. I forgot to append the LSFR signal, but the register is correctly outputting pseudorandom numbers every clock cycle.
 
-### Testing #2
+### Testing (single-cycle) #2
 Here is a second program that squares a random number between 1 and 8 and stores the value into x3:
 ```systemverilog
 initial begin
@@ -199,7 +199,7 @@ end
 
 This one also worked! The random number masked between 0x0007 and the LSFR was 0x0003 (3 in decimal), added by 1, and then was squared to store the value 0x0010 (16 in decimal) into x3. It was very assuring seeing that the randomization system is correctly used in a program.
 
-### Testing #3
+### Testing (single-cycle) #3
 This final test program performs the monte carlo pi approximation as in the demo: stores # of hits into x9 and sample size into x10
 ```systemverilog
 initial begin
@@ -341,7 +341,7 @@ Change register writing to trigger on `negedge clk` so that combinational reads 
 * **The Hazard:** Two instructions try to read RAM in the same clock cycle when RAM only has one read
 * **Solution:** This is already solved because ScatterV uses splits memory modules. instruction_memory for instruction fetches, and program_memory for loading and reading
 
-### Testing #1
+### Testing (pipelined) #1
 Here is the program earlier that performs a simple 1+1=2. Load 1 into x1, 1 into x2, add them together and save into x3. End the program by looping PC to never end.
 
 ```systemverilog
@@ -358,7 +358,30 @@ end
 
 <img width="500" alt="image" src="https://github.com/user-attachments/assets/e8e8ce59-e897-40d6-9d51-4760b1ec1756" />
 
+### Testing (pipelined) #2
+Here is a second program that squares a random number between 1 and 8 and stores the value into x3:
+```systemverilog
+initial begin
+    mem[0]  = 32'h0000008B; // rnd x1              (x1 = fresh random 32-bit number)
+    mem[1]  = 32'h0070F093; // andi x1, x1, 7       (x1 = x1 & 0x7, range 0-7)
+    mem[2]  = 32'h00108093; // addi x1, x1, 1       (x1 = x1 + 1, range 1-8)
+    mem[3]  = 32'h00000233; // add x4, x0, x0       (x4 = 0, running total)
+    mem[4]  = 32'h000002B3; // add x5, x0, x0       (x5 = 0, loop counter)
+    mem[5]  = 32'h00128863; // loop: beq x5, x1, done  (exit once counter == x1)
+    mem[6]  = 32'h00120233; //   add x4, x4, x1     (total += x1)
+    mem[7]  = 32'h00128293; //   addi x5, x5, 1     (counter += 1)
+    mem[8]  = 32'hFF5FF06F; //   jal x0, loop       (jump back to loop)
+    mem[9]  = 32'h000201B3; // done: add x3, x4, x0 (x3 = x1^2, final result)
+    mem[10] = 32'h0000006F; // j done (jump to current PC forever)
+    for (int i = 11; i < 64; i++) begin
+        mem[i] = 32'h00000013; // NOP (addi x0, x0, 0)
+    end
+end
+```
 
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/60ea3478-94e5-40d5-8257-5a40829bc2e1" />
+
+This one also worked! The random number masked between 0x0007 and the LSFR was 0x0003 (3 in decimal), added by 1, and then was squared to store the value 0x0010 (16 in decimal) into x3. It was very assuring seeing that the randomization system is correctly used in a program.
 Success! :) Once again, x3 has the value 0x0002 after finishing. It was so reassuring to see that a program can actually run considering how much work I had to put into the new registers, timing, and hazard conditions. Like expected, this program took more clock cycles to run, but it makes sense considering how much efficiency the increased clock speed will provide for longer programs.
 ### Part 2 Reflection Notes
 
