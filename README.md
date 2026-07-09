@@ -260,7 +260,7 @@ This portion of the project is about pipelining my functional single cycle RISC-
 2. **Instruction Decode (ID):** Decodes the fetched instruction to pass control signals, generate immediates, and read combinationally read register
 3. **Execute (EX):** Combinationally performs arithmetic, branches, jumps, RNG, and flag conditions
 4. **Memory Access (MEM):** Sequentially reads or writes the program memory for loads/stores
-5. **Write Back (WB):** Writes a value into a register if control signal allows
+5. **Write Back (WB):** Writes the final writeback value into a register if register writing is enabled
 
 Here is a good visual that helped me understand the flow of instructions using single-cycle vs pipelining:
 
