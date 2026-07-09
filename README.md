@@ -200,7 +200,7 @@ end
 This one also worked! The random number masked between 0x0007 and the LSFR was 0x0003 (3 in decimal), added by 1, and then was squared to store the value 0x0010 (16 in decimal) into x3. It was very assuring seeing that the randomization system is correctly used in a program.
 
 ### Testing #3
-This final test program performs the monte carlo pi approximation as in the demo and stores # of hits into x9 and sample size into x10
+This final test program performs the monte carlo pi approximation as in the demo: stores # of hits into x9 and sample size into x10
 ```systemverilog
 initial begin
         mem[0]  = 32'h00010337; // lui x6, 16
