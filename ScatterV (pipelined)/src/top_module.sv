@@ -1,3 +1,30 @@
+package pipeline_pkg;
+
+    typedef struct packed {
+        logic [1:0] pc_sel;     // needed in EX, 00 PC + 4, 01 jal_en (PC + imm), 10 branch_en (PC + imm), 11 jalr_en (rs1 + imm)
+        logic       alu_src;    // needed in EX, rs2 vs immediate for operand2
+        logic [1:0] alu_op;     // needed in EX, 00 add, 01 subtract, 10 Normal, 11 RND
+        logic       auipc_en;   // needed in EX, Set operand1 to PC
+        logic       ram_read;   // needed in MEM
+        logic       ram_write;  // needed in MEM
+        logic       reg_write;  // needed in WB
+        logic [1:0] wb_sel;     // needed in WB, 00 alu_result (ADD SUB), 01 data (LOAD), 10 pc + 4 (JAL JALR), 11 immediate_out (LUI)
+    } id_ex_ctrl_t;
+
+    typedef struct packed {
+        logic       ram_read;   // needed in MEM
+        logic       ram_write;  // needed in MEM
+        logic       reg_write;  // needed in WB
+        logic [1:0] wb_sel;     // needed in WB
+    } ex_mem_ctrl_t;
+
+    typedef struct packed {
+        logic       reg_write;  // needed in WB
+        logic [1:0] wb_sel;     // needed in WB
+    } mem_wb_ctrl_t;
+
+endpackage
+
 import pipeline_pkg::*;
 
 module top_module (
