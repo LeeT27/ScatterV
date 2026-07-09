@@ -67,7 +67,7 @@ The ratio will converge to π as the sample size approaches ∞. For the sake of
 | `program_counter` | Sets next instruction address |
 | `instruction_memory`| Stores pre-loaded executable test program |
 | `control_unit` | Parses opcode and generate control signals |
-| `immediate_generator`| Parses opcode to formats and extend immediate values |
+| `immediate_generator`| Parses opcode to format and extend immediate values |
 | `register_file` | Holds 32 register bank with synchronous writes and asynchronous reads |
 | `program_memory` | Holds 4 KB RAM with supporting `lb`, `lh`, `lw`, `sb`, `sh`, and `sw` operations |
 | `alu` | Performs arithmetic, logic, shifts, RNG, flag conditions |
