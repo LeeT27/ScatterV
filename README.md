@@ -381,7 +381,7 @@ initial begin
 end
 ```
 
-<img width="500" alt="image" src="https://github.com/user-attachments/assets/523cbb7f-60a8-4af3-8a8a-351891f9e6c8" />
+<img width="700" alt="image" src="https://github.com/user-attachments/assets/523cbb7f-60a8-4af3-8a8a-351891f9e6c8" />
 
 Another success! The random number masked between 0x0007 and the LSFR was 0x0005 (5 in decimal), added by 1, and then was squared to store the value 0x0024 (36 in decimal) into x3. 
 ### Part 2 Reflection Notes
