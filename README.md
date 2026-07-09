@@ -299,24 +299,31 @@ When pipelining the processesor, overlapping the execution of multiple instructi
 * **Solution:** Forwarding unit
   
 **Forwarding unit:** For each `ID_EX` operand, check:
-1. `ex_mem_reg_write == 1` (Writeback instructions only)
+1. `ex_mem_control.reg_write == 1` (Writeback instructions only)
 2. `ex_mem_rd != 0` (`NOP` or `x0` targets don't need forwarding)
 3. `(ex_mem_rd == id_ex_rs1)' or '(ex_mem_rd == id_ex_rs2)` (The destination register must match a source register)
-If all 3 of these conditions are satisfied for an operand, `ex_mem_rd' is routed into ALU input, corresponding to the operand with the matched address. Forwarding rather than stalling allows the processor to perform more efficiently
+If all 3 of these conditions are satisfied for an operand, `ex_mem_rd' is routed as the new rs1 or rs2 value for the execution stage, corresponding to the operand with the matched address. Forwarding with minimal stalling allows the processor to keep the pipeline full, therefore bringing CPI (cycles per instruction) closer to its ideal value of 1.
 
 ### 🟡 MEM-to-EX Data
-* **The Hazard:** An instruction in the **EX stage** requires an operand calculated two cycles prior (currently sitting at the **WB stage** boundary), or it follows a back-to-back memory load (`LW`). The data isn't loaded until the end of the **MEM stage**
+* **The Hazard:** An instruction in the **EX stage** requires an operand calculated two cycles prior (currently sitting at the **WB stage** boundary), or it follows a back-to-back memory load (`LW`) - The data isn't loaded until after the rising edge of **MEM/WB**
 * **Solution:** Forwarding unit and stalling unit
   
 **Forwarding unit:** For each `ID_EX` operand, check:
-1. `ex_mem_reg_write == 1` (Writeback instructions only)
-2. `ex_mem_rd != 0` (`NOP` or `x0` targets don't need forwarding)
-3. `(mem_wb_rd == id_ex_rs1)||mem_wb_rd == id_ex_rs2)` (The destination register must match a source register)
-If all 3 of these conditions are satisfied for an operand, `mem_wb_rd' is routed into ALU input, corresponding to the operand with the matched address.
+1. `mem_wb_control.reg_write == 1`
+2. `ex_mem_rd != 0`
+3. `(mem_wb_rd == id_ex_rs1)||mem_wb_rd == id_ex_rs2)`
+Similar to EX-EX, if all 3 of these conditions are satisfied for an operand, `mem_wb_rd' is routed as the new rs1 or rs2 value for the execution stage, corresponding to the operand with the matched address.
 
-**Stalling unit:** check:
-1. `id_ex_mem_read == 1`
-2. `(mem_wb_rd == id_ex_rs1)||mem_wb_rd == id_ex_rs2)`
+**Stalling unit (first stall):** check:
+1. `id_ex_control.ram_read == 1`
+2. `id_ex_rd != 5'b0`
+3. `(id_ex_rd == id_rs1)||id_ex_rd == id_rs2)`
+
+**Stalling unit (second stall):** check:
+1. `id_ex_control.ram_read == 1`
+2. `id_ex_rd != 5'b0`
+3. `(id_ex_rd == id_rs1)||id_ex_rd == id_rs2)`
+When the stalling flag is raised, it will be up for two cycles. In each cycle, every register in **ID/EX** is latched to zero and the PC is frozen. After the two cycles, the **MEM-EX** forwarding unit routes `mem_wb_read_data` as the new rs1 or rs2 value for the execution stage, corresponding to the operand with the matched address. I tried hard to make it so the design only performed a single stall, but changing `data_memory` to be synchronous forced the read data to be ready a cycle later.
 
 ### 🟢 WB-to-ID Data (Register File Hazard)
 * **The Hazard:** An instruction in the **ID stage** needs to combinationally read a register value that is currently being updated by an older instruction in the **WB stage** during the exact same clock cycle. 
