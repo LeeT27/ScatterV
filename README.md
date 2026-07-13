@@ -293,7 +293,7 @@ In the pipelined model, I replaced the old system of individual control signals 
 ### Data Hazards
 When pipelining the processesor, overlapping the execution of multiple instructions at once introduces data, control, and structural hazards that cause unexpected behaviour. Here are the 5 main hazards I mitigated:
 
-### EX-to-EX Data
+#### EX-to-EX Data
 * An instruction in the EX stage requires an operand calculated by the immediate preceding instruction
   
 **Forwarding unit:** For each ID_EX operand, check:
@@ -302,7 +302,7 @@ When pipelining the processesor, overlapping the execution of multiple instructi
 3. `(ex_mem_rd == id_ex_rs1)' or '(ex_mem_rd == id_ex_rs2)` (The destination register must match a source register)
 If all 3 of these conditions are satisfied for an operand, `ex_mem_rd' is routed as the new rs1 or rs2 value for the execution stage, corresponding to the operand with the matched address. Forwarding with minimal stalling allows the processor to keep the pipeline full, therefore bringing CPI (cycles per instruction) closer to its ideal value of 1.
 
-### MEM-to-EX Data
+#### MEM-to-EX Data
 * An instruction in the EX stage requires an operand calculated two cycles prior, or it follows a back-to-back memory load
   
 **Forwarding unit:** For each ID_EX operand, check:
@@ -322,17 +322,17 @@ Similar to EX-EX, if all 3 of these conditions are satisfied for an operand, `me
 3. `(id_ex_rd == id_rs1)||id_ex_rd == id_rs2)`
 When the stalling flag is raised, it will be up for two cycles. In each cycle, every register in ID/EX is latched to zero and the PC is frozen. After the two cycles, the MEM-EX forwarding unit routes `mem_wb_read_data` as the new rs1 or rs2 value for the execution stage, corresponding to the operand with the matched address. I tried hard to make it so the design only performed a single stall, but changing `data_memory` to be synchronous forced the read data to be ready a cycle later.
 
-### WB-to-ID Data
+#### WB-to-ID Data
 * An instruction in the ID stage needs to combinationally read a register value that is currently being updated by an older instruction in the WB stage during the exact same clock cycle. 
 
 Change register writing to trigger on `negedge clk` so that combinational reads in ID have time right after the write to prepare combinational values to be fed into the ID/EX flip-flop for the positive edge.
 
-### Control
+#### Control
 * If a branch or jump is taken, the instructions tagged along (contents in IF and ID) should no longer be in the pipeline.
   
 **Flushing unit:** Create a `pipeline_flush` flag that is determined by `id_ex_control.pc_sel`. It will always be raised for `JAL` and `JALR` and raised for `BRANCH` if `ex_branch_condition_met` is true. When the pipeline_flush flag is raised, latch `if_id_instruction` to `32'h00000013` (NOP), `if_id_pc` to 0, and all ID/EX registers to 0. All the contents in IF/ID and ID/EX are successfully cleared, allowing for normal functionality as the new instructions enter the pipeline.
 
-### Structural
+#### Structural
 * Two instructions try to read RAM in the same clock cycle when RAM only has one read
 This is already solved because ScatterV uses splits memory modules. instruction_memory for instruction fetches, and program_memory for loading and reading
 
