@@ -56,7 +56,7 @@ $$\pi \approx 4 \times \frac{\text{hits}}{\text{total samples}}$$
 
 The ratio will converge to π as the sample size approaches ∞. For the sake of hardware, I stuck to displaying only hits and sample count on FPGA so that decimals don't need to be calculated. Here is the video demo of the working processor and program:
 
-[![ScatterV 5-Stage RISC-V: Monte Carlo π Approximation on FPGA](https://github.com/user-attachments/assets/0c46638d-2549-4b72-9456-93bbb868283e](https://www.youtube.com/watch?v=-C9KRU8tSlg)
+[![ScatterV 5-Stage RISC-V: Monte Carlo π Approximation on FPGA](https://github.com/user-attachments/assets/0c46638d-2549-4b72-9456-93bbb868283e)](https://www.youtube.com/watch?v=-C9KRU8tSlg)
 
 ---
 ## Architecture Overview (Pipelined)
