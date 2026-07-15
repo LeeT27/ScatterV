@@ -418,7 +418,7 @@ Since the 7-segment display needs time to light up due to the nature of transist
 Now that my constraints and I/O was properly configured, I just had to program device by running these 3 processes:
 - Synthesis: Translate SystemVerilog into logic gates
 - Implementation: Route the design by mapping into LUTs and BRAM
-- Bitstream Generation:
+- Bitstream Generation: Converts full physical image and logic into a binary configuration file
 After these, I clicked "Program Device", finally programming my FPGA board
 
 ### Final Demo
