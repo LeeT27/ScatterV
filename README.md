@@ -483,16 +483,16 @@ Again, here is the successful demo video:
 </p>
 
 ### Performance Comparison
-To evaluate the performance gains of the new pipelined design compared to the previous single-cycle design. Using a targetted clock speed of **100 MHz (10 ns period)**, I ran timing analysis in Vivado to find the worst negative slack (WNS) value to calculate the max clock frequency ($F_{\text{max}}$) of each model:
+To evaluate the performance gains of the new pipelined design compared to the previous single-cycle design. Using a targetted clock speed of **400 MHz (2.5 ns period)**, I ran timing analysis in Vivado to find the worst negative slack (WNS) value to calculate the max clock frequency ($F_{\text{max}}$) of each model:
 
 $$
 F_{\text{max}} = \frac{1}{T_{\text{target}} - \text{WNS}}
 $$
 
-| Design Version | Slack (WNS) | Max Speed ($F_{\text{max}}$) |
-| :--- | :--- | :--- |
-| **Single-Cycle** | `[Insert, e.g., -8.50 ns]` | **`[Insert, e.g., 54.05 MHz]`** |
-| **Pipelined** | `[Insert, e.g., +2.10 ns]` | **`[Insert, e.g., 126.58 MHz]`** |
+| Design Version | Slack (WNS) | Worst-Case Logic Depth (Gates) | Max Speed ($F_{\text{max}}$) |
+| :--- | :--- | :---: | :--- |
+| **Single-Cycle** | `[Insert, e.g., -8.50 ns]` | `[Insert, e.g., 55 gates]` | **`[Insert, e.g., 54.05 MHz]`** |
+| **Pipelined** | `[Insert, e.g., +2.10 ns]` | `[Insert, e.g., 10 gates]` | **`[Insert, e.g., 126.58 MHz]`** |
 
 Makes sense considering how the single-cycle processor has a way longer worst propagation path compared to the pipelined processor.
 ### Part 3 Reflection Notes
