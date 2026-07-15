@@ -6,10 +6,10 @@
 March 31, 2026
 
 # ScatterV
-ScatterV is a **custom pipelined RISC-V processor** implemented in SystemVerilog and **synthesized on FPGA**. It features standard functionality of a RISC-V processor and **includes a custom instruction**, `RND`, which loads a pseudorandom number into a register using a linear feedback shift register (LFSR) to produce maximal-length sequences. I wanted to explore hardware level random number generation for its applications in cryptography, simulations, and randomized algorithms.
+ScatterV is a **custom pipelined RISC-V processor** implemented in SystemVerilog and **synthesized on FPGA**. It features standard functionality of a RISC-V processor and **includes a custom instruction**, `RND`, which loads a pseudorandom number into a register using a linear feedback shift register (LFSR) to produce maximal-length sequences. I wanted to explore hardware-level random number generation for its applications in cryptography, simulations, and randomized algorithms.
 
 This repository builds upon my previous work, [learningVerilog](https://github.com/LeeT27/learningVerilog), where I created a simple, single cycle processor to execute basic ALU, loads, stores, and jumps. ScatterV improves upon this through RISC-V compatibility, new complex instructions, pipelining, hazard detection, and hardware simulation. I separated the project into three major parts/milestones:
-1. Single cycle RISC-V core and RNG implementation
+1. Single-cycle RISC-V core and RNG implementation
 2. Pipeline architecture and hazard mitigation
 3. FPGA Deployment
    
@@ -17,7 +17,7 @@ This repository builds upon my previous work, [learningVerilog](https://github.c
 
 ## Features
 - **Instruction Set:** RV32I base instructions — R, I, U, S, B, J types
-- **Custom `RND` instruction:** Writes a pseudorandom number that changes every clock cycle with 32-bit LSFR to register
+- **Custom `RND` instruction:** Writes a pseudorandom number that changes every clock cycle with 32-bit LFSR to register
 - **Pipelined Architecture:** Multi stage execution for maximum clock speeds — IF → ID → EX → MEM → WB
 - **Hazard Protection:** Hazard protection using forwarding, stalling, flushing, and split memory
 - **FPGA Deployment:** Deployed on Spartan-7 FPGA with Vivado's toolchain (synthesis, implementation, bitstream generation)  
@@ -127,7 +127,7 @@ The ratio will converge to π as the sample size approaches ∞. For the sake of
   
 ---
 
-## Part 1: Single cycle RISC-V core and RNG implementation
+## Part 1: Single-cycle RISC-V core and RNG implementation
 When I finished designing my very [first processor](https://github.com/LeeT27/learningVerilog) around a year ago, I felt very thrilled that I created a custom ISA CPU that could perform simple arithmetic programs. Reflecting, I realized that my ISA was inefficient, slow, and lacking in instructions. I wanted to try again as I felt more inspired to take on more industry level processors such as RISC-V, while also tackling pipeline theory. I chose RISC-V for its popularity in IoT, embedded systems, and operating systems. Finding that RISC-V is easily modifiable, I also wanted to create a custom instruction, `RND`, that could be used for demonstration because I found its real world applications to be amusing. Here is the theory behind hardware RNG:
 
 ### 🎲 `RND` Instruction Implementation
@@ -176,7 +176,7 @@ end
 
 <img width="500" alt="image" src="https://github.com/user-attachments/assets/22387364-5652-4ba4-980d-d7fb6f12d4c1" />
 
-It worked! :) x3 successfully has the value 0x0002 at the end of the program. I forgot to append the LSFR signal, but the register is correctly outputting pseudorandom numbers every clock cycle.
+It worked! :) x3 successfully has the value 0x0002 at the end of the program. I forgot to append the LFSR signal, but the register is correctly outputting pseudorandom numbers every clock cycle.
 
 ### Testing (single-cycle) #2
 Here is a second program that squares a random number between 1 and 8 and stores the value into x3:
@@ -201,7 +201,7 @@ end
 
 <img width="500" alt="image" src="https://github.com/user-attachments/assets/60ea3478-94e5-40d5-8257-5a40829bc2e1" />
 
-This one also worked! The random number masked between 0x0007 and the LSFR was 0x0003 (3 in decimal), added by 1, and then was squared to store the value 0x0010 (16 in decimal) into x3. It was very assuring seeing that the randomization system is correctly used in a program.
+This one also worked! The random number masked between 0x0007 and the LFSR was 0x0003 (3 in decimal), added by 1, and then was squared to store the value 0x0010 (16 in decimal) into x3. It was very assuring seeing that the randomization system is correctly used in a program.
 
 ### Testing (single-cycle) #3
 This final test program performs the monte carlo pi approximation as in the demo: stores # of hits into x9 and sample size into x10
@@ -258,7 +258,7 @@ Haha. Insanely large waveform. The first sample iteration loop took ~10,000 cloc
 - What helped me to debug these was working was constantly using EDAPlayground and appending register signals to test each individual instructions and making sure the correct control signals and multiplexer results had correct behaviour.
 
 ## Part 2: Pipeline architecture and hazard mitigation
-This portion of the project is about pipelining my functional single cycle RISC-V core in order to increase the maximum clock speed. A major issue with my first processor a year back was not only that it was a single cycle, where each instruction needed to complete the 5 stages before the next instruction but also that heavy instructions such as `MULT` and `DIV` made the worst case propagation delay much longer. I pipelined scatterV using the following 5-stage RISC-V pipeline model to minimize the worst case propagation delay:
+This portion of the project is about pipelining my functional single-cycle RISC-V core in order to increase the maximum clock speed. A major issue with my first processor a year back was not only that it was a single-cycle, where each instruction needed to complete the 5 stages before the next instruction but also that heavy instructions such as `MULT` and `DIV` made the worst case propagation delay much longer. I pipelined ScatterV using the following 5-stage RISC-V pipeline model to minimize the worst case propagation delay:
 
 1. **Instruction Fetch (IF):** Fetches the instruction from `instruction_memory`, using `if_pc` as a pointer
 2. **Instruction Decode (ID):** Decodes the fetched instruction to pass control signals, generate immediates, and read combinationally read register
@@ -296,7 +296,7 @@ In the pipelined model, I replaced the old system of individual control signals 
 | `mem_wb_ctrl_t` | `reg_write`, `wb_sel` |
 
 ### Data Hazards
-When pipelining the processesor, overlapping the execution of multiple instructions at once introduces data, control, and structural hazards that cause unexpected behaviour. Here are the 5 main hazards I mitigated:
+When pipelining the processor, overlapping the execution of multiple instructions at once introduces data, control, and structural hazards that cause unexpected behaviour. Here are the 5 main hazards I mitigated:
 
 ### EX-to-EX Data 🔴
 * An instruction in the EX stage requires an operand calculated by the immediate preceding instruction
@@ -383,10 +383,10 @@ end
 
 <img width="700" alt="image" src="https://github.com/user-attachments/assets/523cbb7f-60a8-4af3-8a8a-351891f9e6c8" />
 
-Another success! The random number masked between 0x0007 and the LSFR was 0x0005 (5 in decimal), added by 1, and then was squared to store the value 0x0024 (36 in decimal) into x3. Now I get to move on to synthesizing the FPGA to simulate the monte carlo program.
+Another success! The random number masked between 0x0007 and the LFSR was 0x0005 (5 in decimal), added by 1, and then was squared to store the value 0x0024 (36 in decimal) into x3. Now I get to move on to synthesizing the FPGA to simulate the monte carlo program.
 ### Part 2 Reflection Notes
 - Pipelining the processor was honestly a lot more fun than part 1, where I had to implement the RISC-V ISA. This was because I got to work with a module structure that was already functional compared to nothing, therefore I was sure of every mistake in the pipelining, where it was a lot easier to track and isolate. Changing each register to its pipelined versions felt like a fun little puzzle, where I had to keep visualizing each different instruction going through the five stages and how the register values should change across the 5 stages.
-- The register groups made the top module look a LOT more organized than in single-cycle, as I could now easily select a signal/register based on what stage it's in. When I initially attempted pipelining ScatterV, I would try to stick with only the double stage name registers like id_ex or mem_wb, but I found it to be a lot neater by seperating the flip-flop outputs to the double stage names and the combinational outputs to the single stage names.
+- The register groups made the top module look a LOT more organized than in single-cycle, as I could now easily select a signal/register based on what stage it's in. When I initially attempted pipelining ScatterV, I would try to stick with only the double stage name registers like id_ex or mem_wb, but I found it to be a lot neater by separating the flip-flop outputs to the double stage names and the combinational outputs to the single stage names.
 - I was surprised to find that there were so many different ways I could've designed this. A good example was when I was trying to extract `id_opcode` from the instruction. I could've either latched `if_instruction[6:0]` via a flip-flop to `id_opcode`, or I could've waited for `if_id_instruction` to come out of its flip-flop so that I could combinationally assign `if_id_instruction[6:0]` to `id_opcode`. I discovered that there are different minor benefits and tradeoffs to each approach: additional pipeline register vs more fanout.
 - I did have to change the `data_memory` reads to be synchronous instead of asynchronous like in the single-cycle model. While many textbooks on pipelined RISC-V architecture utilize asynchronous reads, synthesis on the FPGA would cause problems as the asynchronous reads would prevent the memory from being inferred as BRAM. RAM would have to be built out of lookup tables (LUT), causing very large combinational paths → lower max clock speed. By making reading synchronous, the RAM can be mapped to the BRAM, leaving more space for LUTs to be used for other combinational logic. Because of this however, RAM read data is ready a clock cycle later, meaning that in the case of a load use hazard, an extra stall cycle on top of the first one is needed wait for the data to be read and forwarded. In future processor projects, I plan to find ways to mitigate the two cycle stall problem.
 - At times it got a little confusing when I added the mem stage name registers because some of my control signals also started with "mem". For more than half this part of the project, I kept getting confused by the names, so I just renamed the control signals to be less ambiguous. For example, I changed the signal name of "mem_read" to "ram_read".
@@ -414,7 +414,7 @@ Since the 7-segment displays share segment lines across all digits, different nu
 
 Since the 7-segment display needs time to light up due to the nature of transistors, I had to slow down the switching speed of the LEDs. I did this by creating a software clock from a 100 MHz hardware clock that runs a tick every 16,384 cycles for a refresh rate of 763 Hz. The display is fast enough that the human eye cannot see the flickering and not too fast to the point the transistor can't switch. The software clock selects a different digit to write every software tick via a 3-to-8 decoder.
 
-### Implementaion Flow
+### Implementation Flow
 Now that my constraints and I/O was properly configured, I just had to program device by running these 3 processes:
 - Synthesis: Translate SystemVerilog into logic gates
 - Implementation: Route the design by mapping into LUTs and BRAM
@@ -424,7 +424,7 @@ After these, I clicked "Program Device", finally programming my FPGA board
 ### Final Demo
 Just like in part 1, I ran the Monte Carlo program or the demo, but with the FPGA this time. I also mapped the decimal digits of registers x9 and x10 to the 7-segment display to display the sample counter on the left and the hit counter on the right. Upon reaching this part of the project and finally being able to simulate multiple iterations of plotted points, I had to make changes to the demo program:
 - Changed to a 12 bit coordinate resolution instead of 8 to approximate much closer to π rather than 3.13
-- Changed Y coordinate to be completely independent of X by shifting the LSFR to the right by 12 bits
+- Changed Y coordinate to be completely independent of X by shifting the LFSR to the right by 12 bits
    - This was a major problem before as Y would previously always be dependent on X since the repeated `RND` instruction was two clock cycles after the X, meaning Y was just X, but shifted to the left twice, varying up to 3
 - Created a clock burner subroutine that wastes 66,666 cycles before branching back to `loop` so that simulation is easier to view
 
@@ -482,14 +482,19 @@ Again, here is the successful demo video:
   </a>
 </p>
 
-### Optimatizion Results
+### Optimitizion Results
 
 ### Part 3 Reflection Notes
-- Despite the thrill of successfully approximating π to three decimal deigits, this part of the project didn't come without it's frustrations. To be honest, this part of the project was overall frustrating, especially when I added Vivado to the project environment.
+- Despite the thrill of successfully approximating π to three decimal digits, this part of the project didn't come without its frustrations. To be honest, this part of the project was overall frustrating, especially when I added Vivado to the project environment.
 - When I opened Vivado, I quickly felt overwhelmed as it seemed like nonstop settings and configurations were just blasted at my face. There were so many configurations that I was scared of turning on or not turning on, fearing that it would possibly ruin the programming process of the FPGA.
 - For a whole straight two hours, I found out that the reason my design wasn't implementing was because I chose the board, "AMD Spartan-7 SP701 FPGA Evaluation Platform" and not the part, "xc7s50csga324-1". Before that I was doing literally everything like changing clock speed, remapping the top module peripheral I/O, deleting constraints, and basically double checking every module for possible errors
-- Another painfully long bug that took me 2 whole days to fix was that once I got the part name correct, the program kept approximating to ≈ 3.08 rather than 3.141592. I tried changing the clock speed again, simulating a full circle rather than quarter, changing the clock burner delay, even changing case statements for the digit printing. Eventually I found that the problem like mentioned in the demo changes above was that Y was dependent of X as it was the same value but shifted to the left by two with a possible difference of 3. After changing the resolution from 8 to 12 bits and shifting the LSFR by 12 bits to the right, the demo was finally fixed.
+- Another painfully long bug that took me 2 whole days to fix was that once I got the part name correct, the program kept approximating to ≈ 3.08 rather than 3.141592. I tried changing the clock speed again, simulating a full circle rather than quarter, changing the clock burner delay, even changing case statements for the digit printing. Eventually I found that the problem like mentioned in the demo changes above was that Y was dependent on X as it was the same value but shifted to the left by two with a possible difference of 3. After changing the resolution from 8 to 12 bits and shifting the LFSR by 12 bits to the right, the demo was finally fixed.
 
 ## Final Reflection
-
+- Overall, this project was an amazing experience. I got to expand my knowledge of industry ISAs to cover vastly new types of instructions, implement the abstract theory of hardware randomization into my programs, pipeline my processor with hazard detection, and deploy my design onto an FPGA - all with no prior knowledge. It is honestly amazing how far I have come compared to when I first started learning Verilog.
+- There were many roadblocks and frustrations along each part, the experience and skills I gained in computer architecture is something that will stick with me forever.
+- There were overall many fun things about the project like creating the logic for certain RISC-V instructions, replacing all the old registers with pipelined registers, and having successful demos
+- There were also many not so fun parts, like bit padding the load instructions, changing program memory to be synchronous, and configuring Vivado
+- If I could do one main thing differently for a future digital design project, it would be to become more reliant on SVAs and UVM than the waveform, as more complex systems become involved such as OOP or AI processors, the waveform will become near-impossible to read.
+- My next plan is to use the FPGA board to create a VGA rhythm game (stepmania) clone, using off chip memory interfacing to play stored audio and connecting a keyboard via PS/2 as an input device.
 ---
