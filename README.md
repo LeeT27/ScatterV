@@ -349,6 +349,7 @@ To verify that my hazard units are working correctly, I used SystemVerilog Asser
 - **Flushing flag:** Checked that IF/ID and ID/EX were successfully cleared when `pipeline_flush` was high
 
 <img width="400" alt="image" src="https://github.com/user-attachments/assets/fd42985c-0add-44e9-b4e8-722458ecc7cd" />
+
 As expected, no error was printed to the console. To me, it was difficult to understand why anyone would use SVAs when they designed the direct logic themselves - a lot of these assertion properties seemed plain obvious. However, I eventually saw that in a team environment, error documentation is absolutely neccessary for when someone passes down their design to other digital design engineers. When designs become more complex, I imagine that becoming more reliant on SVAs is a great best practice for writing company code.
 
 ### Testing (pipelined) #1
@@ -401,6 +402,7 @@ Another success! The random number masked between 0x0007 and the LFSR was 0x0005
 - I did have to change the `data_memory` reads to be synchronous instead of asynchronous like in the single-cycle model. While many textbooks on pipelined RISC-V architecture utilize asynchronous reads, synthesis on the FPGA would cause problems as the asynchronous reads would prevent the memory from being inferred as BRAM. RAM would have to be built out of lookup tables (LUT), causing very large combinational paths → lower max clock speed. By making reading synchronous, the RAM can be mapped to the BRAM, leaving more space for LUTs to be used for other combinational logic. Because of this however, RAM read data is ready a clock cycle later, meaning that in the case of a load use hazard, an extra stall cycle on top of the first one is needed wait for the data to be read and forwarded. In future processor projects, I plan to find ways to mitigate the two cycle stall problem.
 - At times it got a little confusing when I added the mem stage name registers because some of my control signals also started with "mem". For more than half this part of the project, I kept getting confused by the names, so I just renamed the control signals to be less ambiguous. For example, I changed the signal name of "mem_read" to "ram_read".
 - To be honest, I feel like I didn't need the packed structs because I passed down each individual member of the struct anyway down the pipeline registers anyway, so I feel that I could've just used a bit-mapped vector to be more organized. Overall though it was nice learning how to define packed structs and how to import them into other files.
+- It was pretty cool learning best practice verification methods like SVAs despite it not helping in this scenario too much. Gives me a glimpse of how companies actually verify their designs.
 ---
 
 ## Part 3: FPGA Deployment
