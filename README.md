@@ -394,7 +394,7 @@ Another success! The random number masked between 0x0007 and the LFSR was 0x0005
 ---
 
 ## Part 3: FPGA Deployment
-Now that I had a fully functional pipelined processor, the last goal was to deploy the design onto FPGA and then use its peripherals to showcase program functionality. I used the RealDigital Boolean Board, which features the Xilinx Spartan-7, with [Vivado 2025.2](https://www.amd.com/en/support/downloads/adaptive-socs-and-fpgas/development-tools/2025-2.html):
+Now that I had a fully functional pipelined processor, the last goal was to deploy the design onto FPGA and then use its peripherals to showcase program functionality. I used the RealDigital Boolean Board, which features the Xilinx Spartan-7 (xc7s50csga324-1), with [Vivado 2025.2](https://www.amd.com/en/support/downloads/adaptive-socs-and-fpgas/development-tools/2025-2.html):
 
 <img width="400" alt="image" src="https://github.com/user-attachments/assets/64426395-34fc-4b6d-bfcd-862ac77036a9" />
 
