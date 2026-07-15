@@ -482,8 +482,19 @@ Again, here is the successful demo video:
   </a>
 </p>
 
-### Optimization Results
+### Performance Comparison
+To evaluate the performance gains of the new pipelined design compared to the previous single-cycle design. Using a targetted clock speed of **100 MHz (10 ns period)**, I ran timing analysis in Vivado to find the worst negative slack (WNS) value to calculate the max clock frequency ($F_{\text{max}}$) of each model:
 
+<div align="center">
+$$F_{\text{max}} = \frac{1}{T_{\text{target}} - \text{WNS}}$$
+</div>
+
+| Design Version | Slack (WNS) | Max Speed ($F_{\text{max}}$) |
+| :--- | :--- | :--- |
+| **Single-Cycle** | `[Insert, e.g., -8.50 ns]` | **`[Insert, e.g., 54.05 MHz]`** |
+| **Pipelined** | `[Insert, e.g., +2.10 ns]` | **`[Insert, e.g., 126.58 MHz]`** |
+
+Makes sense considering how the single-cycle processor has a way longer worst propagation path compared to the pipelined processor.
 ### Part 3 Reflection Notes
 - Despite the thrill of successfully approximating π to three decimal digits, this part of the project didn't come without its frustrations. To be honest, this part of the project was overall frustrating, especially when I added Vivado to the project environment.
 - When I opened Vivado, I quickly felt overwhelmed as it seemed like nonstop settings and configurations were just blasted at my face. There were so many configurations that I was scared of turning on or not turning on, fearing that it would possibly ruin the programming process of the FPGA.
