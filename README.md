@@ -15,7 +15,7 @@ This repository builds upon my previous work, [learningVerilog](https://github.c
    
 ---
 ## High Level Overview
-<img width="1200" alt="image" src="https://github.com/user-attachments/assets/ddde5434-cb0b-4997-9af4-ec608aac62ba" />
+<img width="1080"  alt="image" src="https://github.com/user-attachments/assets/b2666b08-16a2-4189-9c5c-3fcbbd8286e6" />
 
 ## Features
 - **Instruction Set:** RV32I base instructions — R, I, U, S, B, J types
