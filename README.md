@@ -500,7 +500,7 @@ To evaluate the performance gains of the new pipelined design compared to the pr
 | Design Version | Max Clock Speed ($F_{\text{max}}$) |
 | :--- | :--- |
 | **Single-Cycle** | 54.05 MHz |
-| **Pipelined** | 126.58 MHz |
+| **Pipelined** | 97.087 MHz |
 
 Makes sense considering how the single-cycle processor has a way longer worst propagation path compared to the pipelined processor.
 ### Part 3 Reflection Notes
