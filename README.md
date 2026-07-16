@@ -497,7 +497,11 @@ Again, here is the successful demo video:
 </p>
 
 ### Max Clock Speed
-To evaluate the performance performance I ran a timing analysis in Vivado to find the max clock frequency ($F_{\text{max}}$) that the model could maintain while still having a positive worst negative slack (WNS) value. I found that the fastest frequency to be **97.087 MHz**, with a **WNS of 0.011 ns**. The worst case path taken is from `mem_wb_control.reg_write`, where it is fed into the forwarding multiplexer that assigns wb_data to an execution operand, which goes through a full adder to activate a branch and a flush signal, clearing all of `if_instruction` with a fanout value of 122. If I could change something about my design, it would be to evaluate branches in the ID stage instead of EX, so that the MEM-EX forwarding does't ever reach the long branching path.
+To evaluate the processor's performance, I performed a timing analysis in Vivado to determine the maximum clock frequency ($F_{\text{max}}$) at which the design maintained a positive worst negative slack (WNS). The highest achievable frequency was 97.087 MHz, with a WNS of 0.011 ns.
+
+The critical path begins at `mem_wb_control.reg_write`, which feeds the forwarding multiplexer that selects wb_data as an ALU operand. The signal goes through ALU's full adder, where it produces a branch and flush signal. This signal clears `if_instruction` and drives a high-fanout net with a fanout of 122, making it the longest timing path in the design.
+
+If I were to improve the design, I would move branch evaluation from the EX stage to the ID stage. Doing so would eliminate the MEM-to-EX forwarding dependency from the branch decision path, shortening the critical path and therefore a higher maximum clock frequency.
 
 ### Part 3 Reflection Notes
 - Despite the thrill of successfully approximating π to three decimal digits, this part of the project didn't come without its frustrations. To be honest, this part of the project was overall frustrating, especially when I added Vivado to the project environment.
